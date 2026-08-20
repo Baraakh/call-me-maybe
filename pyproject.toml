@@ -1,0 +1,28 @@
+[project]
+name = "call-me-maybe"
+version = "0.1.0"
+description = "Introduction to function calling in LLMs"
+readme = "README.md"
+authors = [
+    { name = "bkhilo", email = "bkhilo@student.42abudhabi.ae" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "llm-sdk",
+    "numpy>=2.2.6",
+    "pydantic>=2.13.4",
+]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "mypy>=2.3.1",
+]
+
+[tool.uv.workspace]
+members = [
+    "llm_sdk",
+]
+
+[tool.uv.sources]
+llm-sdk = { workspace = true }
