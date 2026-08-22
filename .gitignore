@@ -6,9 +6,13 @@ dist/
 wheels/
 *.egg-info
 .mypy_cache/
+.pytest_cache/
 
 # Virtual environments
 .venv
 
 # data ouput foler
 data/output/*
+
+# system folder ignored
+.DS_Store
