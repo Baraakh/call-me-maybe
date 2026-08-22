@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from src.input_handling import InputFileError, get_funcs_def, get_funcs_prompt
+from src.input_handling import InputFileError, get_funcs_def, get_prompts_entry
 from src.models import FunctionDefinition, PromptEntry
 
 VALID_FUNCTIONS_DEFINITION = [
@@ -187,7 +187,7 @@ class TestGetFuncsPrompt:
     ) -> None:
         path = write(tmp_path, "prompts.json", json.dumps(VALID_PROMPTS))
 
-        result = get_funcs_prompt(str(path))
+        result = get_prompts_entry(str(path))
 
         assert len(result) == 2
         assert all(isinstance(item, PromptEntry) for item in result)
@@ -199,7 +199,7 @@ class TestGetFuncsPrompt:
         missing = tmp_path / "does_not_exist.json"
 
         with pytest.raises(InputFileError) as excinfo:
-            get_funcs_prompt(str(missing))
+            get_prompts_entry(str(missing))
 
         assert str(missing) in str(excinfo.value)
         assert excinfo.value.__cause__ is not None
@@ -208,7 +208,7 @@ class TestGetFuncsPrompt:
         self, tmp_path: Path
     ) -> None:
         with pytest.raises(InputFileError):
-            get_funcs_prompt(str(tmp_path))
+            get_prompts_entry(str(tmp_path))
 
     def test_malformed_json_raises_input_file_error(
         self, tmp_path: Path
@@ -216,7 +216,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", '[{"prompt": ]')
 
         with pytest.raises(InputFileError) as excinfo:
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
         assert str(path) in str(excinfo.value)
 
@@ -224,7 +224,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", "")
 
         with pytest.raises(InputFileError):
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
     def test_json_object_instead_of_array_raises_input_file_error(
         self, tmp_path: Path
@@ -232,7 +232,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", json.dumps(VALID_PROMPTS[0]))
 
         with pytest.raises(InputFileError):
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
     def test_wrong_prompt_type_raises_input_file_error(
         self, tmp_path: Path
@@ -241,7 +241,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", json.dumps(broken))
 
         with pytest.raises(InputFileError):
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
     def test_missing_prompt_key_raises_input_file_error(
         self, tmp_path: Path
@@ -250,7 +250,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", json.dumps(broken))
 
         with pytest.raises(InputFileError):
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
     def test_non_utf8_file_raises_input_file_error(
         self, tmp_path: Path
@@ -259,7 +259,7 @@ class TestGetFuncsPrompt:
         path.write_bytes(b"\xff\xfe\x00\x01invalid utf8 \x80\x81")
 
         with pytest.raises(InputFileError) as excinfo:
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
         assert str(path) in str(excinfo.value)
         assert "utf-8" in str(excinfo.value).lower()
@@ -272,7 +272,7 @@ class TestGetFuncsPrompt:
         path = write(tmp_path, "prompts.json", json.dumps(broken))
 
         with pytest.raises(InputFileError) as excinfo:
-            get_funcs_prompt(str(path))
+            get_prompts_entry(str(path))
 
         message = str(excinfo.value)
         assert "pydantic.dev" not in message

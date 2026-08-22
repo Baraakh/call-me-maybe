@@ -100,7 +100,7 @@ def get_funcs_def(path: str) -> list[FunctionDefinition]:
         ) from exc
 
 
-def get_funcs_prompt(path: str) -> list[PromptEntry]:
+def get_prompts_entry(path: str) -> list[PromptEntry]:
     """Load and validate the function calling prompts file.
 
     Args:
