@@ -16,3 +16,5 @@ data/output/*
 
 # system folder ignored
 .DS_Store
+
+sandbox.py
