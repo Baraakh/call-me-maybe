@@ -4,7 +4,13 @@ import argparse
 import sys
 from argparse import Namespace
 
-from .input_handling import InputFileError, get_funcs_def, get_prompts_entry
+from .io_handling.input_handling import (
+    InputFileError,
+    get_funcs_def,
+    get_prompts_entry,
+)
+from .io_handling.output_handling import OutputFileError, write_results
+from .state_machine import StateMachine
 
 
 def parse_args() -> Namespace:
@@ -40,13 +46,19 @@ def main() -> None:
 
     funcs_def_path: str = args.functions_definition
     input_path: str = args.input
-    # output_path: str = args.output
+    output_path: str = args.output
 
     try:
         funcs_def = get_funcs_def(funcs_def_path)
         prompts = get_prompts_entry(input_path)
 
-    except InputFileError as e:
+        state_machine = StateMachine(funcs_def)
+
+        func_call_results = state_machine.get_func_calls_batch(prompts)
+
+        write_results(output_path, func_call_results)
+
+    except (InputFileError, OutputFileError) as e:
         sys.exit(f"{e}")
 
 

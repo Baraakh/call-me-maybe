@@ -12,7 +12,8 @@ raw traceback.
 
 import pydantic
 
-from .models import (
+from ..error_formatting import describe_validation_error
+from ..models import (
     FunctionDefinition,
     FunctionsDefinitionAdapter,
     PromptEntry,
@@ -29,42 +30,6 @@ class InputFileError(Exception):
     ``pydantic.ValidationError`` for malformed or non-conforming JSON) into
     a single, user-facing error type with a clear message.
     """
-
-
-def _describe_validation_error(exc: pydantic.ValidationError) -> str:
-    """Render a ``pydantic.ValidationError`` as a short, plain-language
-    summary.
-
-    ``str(exc)`` is developer-facing: a stack of entries with internal type
-    codes and links to pydantic's own documentation. This instead collapses
-    each underlying error down to a ``"- <location>: <message>"`` bullet,
-    one per line, so someone without Python/pydantic knowledge can tell
-    what is wrong with the file and where — and can still scan a file with
-    several bad entries at a glance.
-    """
-    errors = exc.errors()
-
-    if len(errors) == 1 and errors[0]["type"] == "json_invalid":
-        return f" the file is not valid JSON ({errors[0]['msg']})"
-
-    lines = []
-    for error in errors:
-        loc = error["loc"]
-        if loc and isinstance(loc[0], int):
-            where = f"entry {loc[0]}"
-            if len(loc) > 1:
-                where += " -> " + ".".join(str(part) for part in loc[1:])
-        else:
-            where = ".".join(str(part) for part in loc) or "top level"
-
-        msg = (
-            "this field is required"
-            if error["type"] == "missing"
-            else error["msg"]
-        )
-        lines.append(f"  - {where}: {msg}")
-
-    return "\n" + "\n".join(lines)
 
 
 def get_funcs_def(path: str) -> list[FunctionDefinition]:
@@ -96,7 +61,7 @@ def get_funcs_def(path: str) -> list[FunctionDefinition]:
     except pydantic.ValidationError as exc:
         raise InputFileError(
             f"Invalid functions definition file '{path}':"
-            f"{_describe_validation_error(exc)}"
+            f"{describe_validation_error(exc)}"
         ) from exc
 
 
@@ -129,5 +94,5 @@ def get_prompts_entry(path: str) -> list[PromptEntry]:
     except pydantic.ValidationError as exc:
         raise InputFileError(
             f"Invalid function calling tests file '{path}':"
-            f"{_describe_validation_error(exc)}"
+            f"{describe_validation_error(exc)}"
         ) from exc
