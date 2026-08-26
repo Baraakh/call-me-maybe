@@ -112,7 +112,7 @@ class StateMachine:
         context_ids, text = generate_constrained(
             self.llm_client, self.vocab_trie, context_ids, phase_a
         )
-        func_name = text[len(_NAME_PREFIX) : -len(_NAME_SUFFIX)]
+        func_name = text[len(_NAME_PREFIX):-len(_NAME_SUFFIX)]
         return context_ids, self._funcs_by_name[func_name]
 
     def _generate_parameters(

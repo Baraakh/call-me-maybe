@@ -235,7 +235,7 @@ class Sequence:
             new_primitives = (
                 self._primitives[: self._index]
                 + (stepped,)
-                + self._primitives[self._index + 1 :]
+                + self._primitives[self._index + 1:]
             )
             return Sequence(new_primitives, self._index)
         if current.can_exit() and self._index + 1 < len(self._primitives):
