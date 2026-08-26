@@ -10,7 +10,7 @@ from .io_handling.input_handling import (
     get_prompts_entry,
 )
 from .io_handling.output_handling import OutputFileError, write_results
-from .state_machine import StateMachine
+from .state_machine import StateMachine, StateMachineError
 
 
 def parse_args() -> Namespace:
@@ -58,8 +58,13 @@ def main() -> None:
 
         write_results(output_path, func_call_results)
 
-    except (InputFileError, OutputFileError) as e:
+    except (InputFileError, OutputFileError, StateMachineError) as e:
         sys.exit(f"{e}")
+    except Exception as e:
+        # Last-resort safety net: no matter what goes wrong (a model/
+        # runtime failure, an unforeseen bug, ...), the program must
+        # exit with a clear message instead of an unhandled traceback.
+        sys.exit(f"Unexpected error: {e}")
 
 
 if __name__ == "__main__":

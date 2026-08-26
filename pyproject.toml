@@ -27,3 +27,9 @@ members = [
 
 [tool.uv.sources]
 llm-sdk = { workspace = true }
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: loads the real model and hits the Hugging Face Hub/cache; skipped by default, run explicitly with `pytest -m slow`",
+]
+addopts = "-m 'not slow'"

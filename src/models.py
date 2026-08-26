@@ -13,7 +13,7 @@ class TypeSpec(BaseModel):
     """Type descriptor — used for both a parameter's type and a function's
     return type, since both are shaped as {"type": "..."} in the schema."""
 
-    type: Literal["string", "number", "boolean"]
+    type: Literal["string", "number", "boolean", "integer"]
 
 
 class FunctionDefinition(BaseModel):

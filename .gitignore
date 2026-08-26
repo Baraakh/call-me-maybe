@@ -12,7 +12,7 @@ wheels/
 .venv
 
 # data ouput foler
-data/output/*
+data/output/
 
 # system folder ignored
 .DS_Store

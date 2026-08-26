@@ -1,0 +1,10 @@
+[flake8]
+max-line-length = 79
+exclude = .venv,.git,__pycache__,.mypy_cache
+# E203 (whitespace before ':') conflicts with PEP 8's own rule that a
+# slice with a "complex" expression on either side of ':' gets symmetric
+# spacing -- which ruff format (like Black) correctly applies. This is a
+# long-documented flake8/formatter disagreement; Black's own docs
+# recommend this exact ignore. See:
+# https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8
+extend-ignore = E203
