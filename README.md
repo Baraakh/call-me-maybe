@@ -208,11 +208,8 @@ cat data/output/function_calling_results.json
 - [Pydantic documentation](https://docs.pydantic.dev/)
 - [Trie data structure — CLRS / standard algorithms references](https://en.wikipedia.org/wiki/Trie)
 
-**AI usage:** Claude (Anthropic's Claude Code) was used throughout
-this project as a pair-programming assistant: designing the grammar
-state machine and constrained-decoding generator, implementing the
-vocabulary trie, writing and debugging the pydantic models and I/O
-error handling, drafting and iterating on unit/integration tests, and
-diagnosing runtime issues (including the hung-generation bug described
-above under Challenges Faced). All generated code was reviewed, run,
-and understood before being kept.
+**AI usage:** Claude (Anthropic's Claude Code) was used to help write
+this README and the project's unit/integration tests, and to suggest
+optimizations (such as the trie-based token lookup and state-based
+caching in the constrained-decoding pipeline). All generated content
+was reviewed, run, and understood before being kept.
